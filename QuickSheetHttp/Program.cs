@@ -18,12 +18,6 @@ using System.Threading.Tasks;
 
 #region Protocol types
 
-class InitMessage
-{
-    [JsonPropertyName("type")] public string Type { get; set; } = "";
-    [JsonPropertyName("version")] public int Version { get; set; }
-}
-
 class RegisterMessage
 {
     [JsonPropertyName("type")] public string Type { get; set; } = "register";
@@ -50,7 +44,7 @@ class CellUpdate
 
 class ResponseMessage
 {
-    [JsonPropertyName("type")] public string Type { get; set; } = "response";
+    [JsonPropertyName("type")] public string Type { get; set; } = "write";
     [JsonPropertyName("id")] public string Id { get; set; } = "";
     [JsonPropertyName("cells")] public List<CellUpdate> Cells { get; set; } = new();
 }
@@ -85,12 +79,8 @@ class Program
         Console.InputEncoding = Encoding.UTF8;
         Console.OutputEncoding = Encoding.UTF8;
 
-        string? initLine = Console.ReadLine();
-        if (initLine == null) return;
-
-        try { JsonSerializer.Deserialize<InitMessage>(initLine); }
-        catch { return; }
-
+        // Protocol: extension emits register on startup. Host listens; it does NOT
+        // send an init message.
         var reg = new RegisterMessage
         {
             Name = "curl",
@@ -100,6 +90,7 @@ class Program
             Author = "cemheren"
         };
         Console.WriteLine(JsonSerializer.Serialize(reg));
+        Console.Out.Flush();
 
         while (true)
         {
