@@ -16,7 +16,7 @@ ext: github:cemheren/quicksheet-curl
 curl: METHOD URL [options] [body]
 ```
 
-### Examples
+### Basic examples
 
 | Cell contents | What it does |
 |---|---|
@@ -26,6 +26,38 @@ curl: METHOD URL [options] [body]
 | `curl: DELETE https://api.example.com/users/1` | DELETE a resource |
 | `curl: GET https://api.example.com -H "Authorization: Bearer token123"` | GET with auth header |
 | `curl: POST https://api.example.com -H "Content-Type: text/xml" --body <data/>` | POST with custom content type |
+
+### Using cell references
+
+QuickSheet supports `{CellRef}` syntax to reference other cells. This lets you build dynamic requests where URLs, tokens, and bodies come from other cells in your spreadsheet.
+
+**Example layout — API testing dashboard:**
+
+| | A | B |
+|---|---|---|
+| 1 | `https://api.example.com` | *(base URL)* |
+| 2 | `Bearer sk-abc123...` | *(auth token)* |
+| 3 | `{"name":"Alice","role":"admin"}` | *(request body)* |
+| 4 | `curl: GET {A1}/users -H "Authorization: {A2}"` | → fetches user list |
+| 5 | `curl: POST {A1}/users --body {A3} -H "Authorization: {A2}"` | → creates user with body from A3 |
+| 6 | `curl: GET {A1}/users/1 --headers --json` | → detailed single-user view |
+
+**Why this is useful:**
+- Change the base URL in A1 to switch between staging/production
+- Rotate the auth token in A2 without editing every request
+- Modify the POST body in A3 and re-run to test different payloads
+- Build a full API test suite across rows, all sharing the same config
+
+**More cell reference patterns:**
+
+| Cell | Contents | Notes |
+|---|---|---|
+| A1 | `https://httpbin.org` | Base URL |
+| A2 | `my-api-key-123` | API key |
+| B1 | `curl: GET {A1}/get` | Simple GET |
+| B2 | `curl: GET {A1}/headers -H "X-Api-Key: {A2}"` | GET with key from A2 |
+| B3 | `curl: POST {A1}/post {"key":"{A2}"}` | POST embedding the key in JSON body |
+| B4 | `curl: GET {A1}/status/404 --status-only` | Test error handling |
 
 ### Options
 
@@ -64,6 +96,14 @@ ERR TLS error (try -k flag): certificate not trusted
 
 GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
 
+## Use cases
+
+- **API development** — test endpoints without leaving your desktop
+- **Service monitoring** — pin health checks to your wallpaper with `--status-only`
+- **Webhook debugging** — POST test payloads to webhook receivers
+- **Auth testing** — quickly cycle through tokens with cell references
+- **CI/CD checks** — monitor deployment endpoints alongside your other dashboards
+
 ## Notes
 
 - URLs without `http://` or `https://` prefix default to `https://`
@@ -71,6 +111,7 @@ GET, POST, PUT, DELETE, PATCH, HEAD, OPTIONS
 - Response bodies are truncated at 100KB
 - Sensitive headers (Set-Cookie, Authorization) are redacted in `--headers` output
 - Line length capped at 120 chars for clean display
+- Cell references (`{A1}`, `{B2}`) are resolved by QuickSheet before the extension sees them
 
 ## Requirements
 
