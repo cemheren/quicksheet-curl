@@ -1,0 +1,8 @@
+﻿{
+  "name": "curl",
+  "version": "1.0.0",
+  "description": "cURL-style HTTP client for QuickSheet — GET/POST/PUT/DELETE from cells",
+  "prefix": "curl:",
+  "author": "cemheren",
+  "entrypoint": "dotnet run --project QuickSheetHttp.csproj"
+}
