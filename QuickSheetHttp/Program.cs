@@ -50,7 +50,7 @@ class CellUpdate
 
 class ResponseMessage
 {
-    [JsonPropertyName("type")] public string Type { get; set; } = "response";
+    [JsonPropertyName("type")] public string Type { get; set; } = "write";
     [JsonPropertyName("id")] public string Id { get; set; } = "";
     [JsonPropertyName("cells")] public List<CellUpdate> Cells { get; set; } = new();
 }
