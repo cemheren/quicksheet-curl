@@ -96,7 +96,7 @@ class Program
             Name = "curl",
             Version = "1.0.0",
             Description = "cURL-style HTTP client — GET/POST/PUT/DELETE from cells (Postman-in-a-cell)",
-            Prefix = "curl:",
+            Prefix = "curl",
             Author = "cemheren"
         };
         Console.WriteLine(JsonSerializer.Serialize(reg));
@@ -407,4 +407,5 @@ class HttpResult
     public string Body { get; set; } = "";
     public List<KeyValuePair<string, string>> Headers { get; set; } = new();
 }
+
 
