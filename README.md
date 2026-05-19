@@ -7,7 +7,7 @@ A [QuickSheet](https://github.com/cemheren/QuickSheet) extension that turns cell
 Type in any cell:
 
 ```
-ext: github:cemheren/quicksheet-curl
+ext: github:Deskworks/quicksheet-curl
 ```
 
 ## Usage
